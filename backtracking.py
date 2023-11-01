@@ -37,9 +37,9 @@ def load_dictionary(filename):
 
 def find_horizontal_words(crossword):
     """
-
-    :param crossword:
-    :return:
+    This function finds the horizontal words in the crossword puzzle
+    :param crossword: Crossword puzzle
+    :return: list of horizontal words
     """
     horizontal_words = []
 
@@ -94,9 +94,9 @@ def find_horizontal_words(crossword):
 
 def find_vertical_words(crossword):
     """
-
-    :param crossword:
-    :return:
+    This function finds the vertical words in the crossword puzzle
+    :param crossword: Crossword puzzle
+    :return: list of vertical words
     """
     vertical_words = []
     word = Word()
@@ -128,48 +128,45 @@ def find_vertical_words(crossword):
     return vertical_words
 
 
-def backtracking(assigned_variable_list, not_assigned_variable_list, dict):
+def backtracking(assigned_variable_list, not_assigned_variable_list, dictionary):
     """
-
+    This function implements the backtracking algorithm
     :param assigned_variable_list:
     :param not_assigned_variable_list:
-    :param dict:
-    :return:
+    :param dictionary: dictionary of words
+    :return: completed crossword puzzle
     """
     if len(not_assigned_variable_list) == 0:
         return assigned_variable_list
 
     var = not_assigned_variable_list[0]
 
-    possible_val = get_possible_values(var, assigned_variable_list, dict)
+    possible_val = get_possible_values(var, assigned_variable_list, dictionary)
 
     for val in possible_val:
         check_var = copy.deepcopy(var)
         check_var.value = val
         if check_constraint(check_var, assigned_variable_list):
             var.value = val
-            result = backtracking(assigned_variable_list + [var], not_assigned_variable_list[1:], dict)
+            result = backtracking(assigned_variable_list + [var], not_assigned_variable_list[1:], dictionary)
             if result != None:
                 return result
-            # we've reached here because the choice we made by putting some 'word' here was wrong
-            # hence now leave the word cell unassigned to try another possibilities
             var.value = ''
 
     return None
 
 
-# returns all possible values for the desired variable
-def get_possible_values(var, assigned_variable_list, dict):
+def get_possible_values(var, assigned_variable_list, dictionary):
     """
 	Function to return the possible values
 	:param var:
 	:param assigned_variable_list:
-	:param dict:
+	:param dictionary:
 	:return:
 	"""
     possibles_values = []
 
-    for val in dict:
+    for val in dictionary:
         if len(val) == var.length:
             possibles_values.append(val)
 
@@ -180,7 +177,6 @@ def get_possible_values(var, assigned_variable_list, dict):
     return possibles_values
 
 
-# checks var against assigned variable list
 def check_constraint(var, assigned_variable_list):
     """
 	Function to validate constraints
@@ -205,8 +201,6 @@ def check_constraint(var, assigned_variable_list):
     return True
 
 
-# treat words here like lines so we find the intersection point of horizontal and vertical words (the character
-# position - intersection point is the constraints which the algorithm must apply to get a valid solution)
 def check_intersections(w1, w2):
     """
 	Check to see if words are intersecting.
@@ -244,11 +238,7 @@ def insert_word_to_puzzle(crossword, word, coord, orientation):
     return crossword
 
 
-def custom_heuristic():
-    print('custom heuristic: ')
-
-
-def execute_application():
+def execute_backtracking():
     """
 	Runs the application.
 	:return:
@@ -265,7 +255,7 @@ def execute_application():
     print("---------- Crossword ---------")
     for line in cw_puzzle:
         print(line)
-    print("------------------------------")
+
     print("---------- Solution ----------")
 
     if suggested_solution is None:
@@ -276,8 +266,6 @@ def execute_application():
 
         for line in cw_puzzle:
             print(line)
-
-    print("------------------------------")
 
 
 class Word:
